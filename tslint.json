@@ -13,8 +13,8 @@
         ],
         "curly": false,
         "eofline": true,
-        "indent": [true, "tabs"],
-        "ter-indent": [true, "tab", {
+        "indent": [true, "spaces"],
+        "ter-indent": [false, "tab", {
             "SwitchCase": 1,
             "MemberExpression": 1,
             "ArrayExpression": 1,
