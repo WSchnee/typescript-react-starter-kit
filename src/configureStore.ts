@@ -15,28 +15,28 @@ const middlewares = [sagaMiddleware, routerMiddleware(history)]
 const composeEnhancers: typeof compose = (window as any).__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose
 
 export default function configureStore (initialState?: Partial<State>) {
-	const store = createStore(
-		rootReducer,
-		initialState || {},
-		composeEnhancers(
-			applyMiddleware(...middlewares)
-		)
-	)
+    const store = createStore(
+        rootReducer,
+        initialState || {},
+        composeEnhancers(
+            applyMiddleware(...middlewares)
+        )
+    )
 
-	// run sagas
-	SagaManager.startSagas(sagaMiddleware)
+    // run sagas
+    SagaManager.startSagas(sagaMiddleware)
 
-	if (__DEV__ && module.hot) {
-		// Hot reload reducers (requires Webpack or Browserify HMR to be enabled)
-		module.hot.accept('./reducers', () =>
-			store.replaceReducer(require('./reducers').default)
-		)
+    if (__DEV__ && module.hot) {
+        // Hot reload reducers (requires Webpack or Browserify HMR to be enabled)
+        module.hot.accept('./reducers', () =>
+            store.replaceReducer(require('./reducers').default)
+        )
 
-		module.hot.accept('./sagas/SagaManager', () => {
-			SagaManager.cancelSagas(store)
-			require('./sagas/SagaManager').default.startSagas(sagaMiddleware)
-		})
-	}
+        module.hot.accept('./sagas/SagaManager', () => {
+            SagaManager.cancelSagas(store)
+            require('./sagas/SagaManager').default.startSagas(sagaMiddleware)
+        })
+    }
 
-	return store
+    return store
 }

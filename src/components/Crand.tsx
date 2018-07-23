@@ -3,14 +3,13 @@ import { connect } from 'react-redux'
 import { returntypeof } from 'react-redux-typescript'
 import { Actions } from '../actions'
 import { State } from '../reducers'
-import { CFunctions } from '../reducers/crand'
 const wasm = require('../csource/test.c')
 
 const mapStateToProps = (state: State): {
-    cfuncs: CFunctions,
+    initialized: boolean,
     number: number
 } => ({
-    cfuncs: state.crand.cfuncs,
+    initialized: state.crand.initialized,
     number: state.crand.number
 })
 
@@ -25,18 +24,20 @@ type Props = typeof stateProps & typeof dispatchToProps
 class Crand extends React.Component<Props> {
 
     public componentWillMount () {
-        this.props.initWasm(wasm)
         wasm.initialize().then((module: any) => {
+            const funcs = Object.keys(module).filter(name => name.startsWith('_') && name !== '_main')
+            const actualFuncs: any = {}
+            funcs.forEach(funcName => actualFuncs[funcName.slice(1, funcName.length)] = module[funcName])
             this.props.initWasm({
                 initialized: true,
-                getRandom: module._roll_dice
+                ...actualFuncs
             })
         })
     }
 
     render () {
         return (
-            this.props.cfuncs ? (
+            this.props.initialized ? (
             <div>
                 <h1>
                     Dice output: {this.props.number}

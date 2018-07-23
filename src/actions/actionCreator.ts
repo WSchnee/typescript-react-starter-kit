@@ -7,12 +7,12 @@ export function createAction<T>       (type: T): EmptyActionCreator<T>
 export function createAction<T, P>    (type: T): ActionCreator<T, P>
 export function createAction<T, P, M> (type: T): ActionMetaCreator<T, P, M>
 export function createAction<T, P, M> (type: T): EmptyActionCreator<T>&ActionCreator<T, P>&ActionMetaCreator<T, P, M> {
-	let action: any
-	action = (payload?: P, meta?: M) => ({
-		type,
-		payload,
-		meta
-	})
-	action.type = type
-	return action
+    let action: any
+    action = (payload?: P, meta?: M) => ({
+        type,
+        payload,
+        meta
+    })
+    action.type = type
+    return action
 }

@@ -1,19 +1,19 @@
 import { Action } from '../actions'
 
 export interface CFunctions {
-    initialized: boolean,
-    getRandom: () => any
+    roll_dice: () => number
 }
 
 export interface State {
-    cfuncs: CFunctions,
+    initialized: boolean,
+    functions: CFunctions,
     number: number
 }
 
 const DEFAULT_STATE: State = {
-    cfuncs: {
-        initialized: false,
-        getRandom: () => -1
+    initialized: false,
+    functions: {
+        roll_dice: () => -1
     },
     number: 0
 }
@@ -23,12 +23,15 @@ export default function crand (state: State = DEFAULT_STATE, action: Action) {
         case 'INIT_WASM':
             return {
                 ...state,
-                cfuncs: action.payload
+                initialized: true,
+                functions: {
+                    ...action.payload
+                }
             }
         case 'GET_RANDOM':
             return {
                 ...state,
-                number: state.cfuncs.getRandom()
+                number: state.functions.roll_dice()
             }
         default:
             return state

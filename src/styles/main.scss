@@ -1,5 +1,4 @@
-@import "~normalize.css";
-@import "./variables.scss";
+// @import "~normalize.css";
 
 * {
 	box-sizing: border-box;
@@ -9,3 +8,21 @@ html, body {
 	height: 100%;
 	overflow-y: overlay;
 }
+
+$header-height: 3rem;
+$max-width: 60rem;
+$grid-columns: auto $max-width auto;
+$color-darker: #2B332F;
+$color-dark: #325643;
+$color: #28784D;
+$color-light: #0C9B4E;
+$color-lighter: #00C059;
+
+$color-main: #108EE9;
+
+@mixin tablet {
+	@media (max-width: $max-width) {
+		@content;
+	}
+}
+
