@@ -1,9 +1,8 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { returntypeof } from 'react-redux-typescript'
 import { Actions } from '../actions'
 import { State } from '../reducers'
-const wasm = require('../csource/test.c')
+const wasm = require('../csource/test.cpp')
 
 const mapStateToProps = (state: State): {
     initialized: boolean,
@@ -18,19 +17,15 @@ const dispatchToProps = {
     getRandom: Actions.getRandom
 }
 
-const stateProps = returntypeof(mapStateToProps)
-type Props = typeof stateProps & typeof dispatchToProps
+type Props = ReturnType<typeof mapStateToProps> & typeof dispatchToProps
 
 class Crand extends React.Component<Props> {
 
     public componentWillMount () {
-        wasm.initialize().then((module: any) => {
-            const funcs = Object.keys(module).filter(name => name.startsWith('_') && name !== '_main')
-            const actualFuncs: any = {}
-            funcs.forEach(funcName => actualFuncs[funcName.slice(1, funcName.length)] = module[funcName])
+        wasm.init().then((module: any) => {
             this.props.initWasm({
                 initialized: true,
-                ...actualFuncs
+                ...module.exports
             })
         })
     }
