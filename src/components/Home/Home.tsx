@@ -1,5 +1,6 @@
 import React from 'react'
-import Crand from './Crand'
+// import Crand from '../Crand'
+import GlCanvas from '../GlCanvas'
 
 type Props = {}
 
@@ -7,8 +8,8 @@ class Home extends React.Component<Props> {
 
     public render (): JSX.Element {
         return (<div>
-            <h1>Hello world test123</h1>
-            <Crand />
+            <GlCanvas width={640} height={480}/>
+            {/* <Crand /> */}
         </div>)
     }
 }

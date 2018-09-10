@@ -1,15 +1,15 @@
+import { Actions } from 'actions'
+import wasm from 'csource/test.cpp'
 import React from 'react'
 import { connect } from 'react-redux'
-import { Actions } from '../actions'
-import { State } from '../reducers'
-const wasm = require('../csource/test.cpp')
+import { State } from 'reducers'
 
 const mapStateToProps = (state: State): {
     initialized: boolean,
     number: number
 } => ({
-    initialized: state.crand.initialized,
-    number: state.crand.number
+    initialized: state.wasm.initialized,
+    number: state.wasm.number
 })
 
 const dispatchToProps = {

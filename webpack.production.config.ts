@@ -6,22 +6,22 @@ import baseConfig from './webpack.config'
 (baseConfig.module as any).rules[1].use.unshift(MiniCssExtractPlugin.loader)
 
 const config: webpack.Configuration = {
-	...baseConfig,
+    ...baseConfig,
 
-	output: {
-		path: path.join(__dirname, 'dist'),
-		filename: '[name]-[chunkash].js'
-	},
+    output: {
+        path: path.join(__dirname, 'dist'),
+        filename: '[name]-[chunkash].js'
+    },
 
-	mode: 'production',
-	devtool: 'source-map',
-	plugins: [
-		new MiniCssExtractPlugin({
-			filename: '[name].css',
-			chunkFilename: '[id].css'
-		}),
-		...baseConfig.plugins
-	]
+    mode: 'production',
+    devtool: 'source-map',
+    plugins: [
+        new MiniCssExtractPlugin({
+            filename: '[name].css',
+            chunkFilename: '[id].css'
+        }),
+        ...baseConfig.plugins
+    ]
 }
 
 module.exports = config
