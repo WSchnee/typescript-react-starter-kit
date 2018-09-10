@@ -93,6 +93,10 @@ class RenderPipeline {
             [10, 10, 10]
         )
 
+        const normalMatrix = mat4.create()
+        mat4.invert(normalMatrix, modelViewMatrix)
+        mat4.transpose(normalMatrix, normalMatrix)
+
         // // // Tell WGL how to pull pcolor out from the color buffer and into the vertexPosition attribute
         // {
         //     const numComponents = 4    // Pull out 4 values per iteration
@@ -106,6 +110,26 @@ class RenderPipeline {
         //     gl.vertexAttribPointer(programInfo.attributeLocations.vertexColor, numComponents, type, normalize, stride, offset)
         //     gl.enableVertexAttribArray(programInfo.attributeLocations.vertexColor)
         // }
+
+          // Tell WebGL how to pull out the normals from
+        // the normal buffer into the vertexNormal attribute.
+        {
+            const numComponents = 3
+            const type = gl.FLOAT
+            const normalize = false
+            const stride = 0
+            const offset = 0
+            gl.bindBuffer(buffers.normals.type, buffers.normals.buffer)
+            gl.vertexAttribPointer(
+                programInfo.attributeLocations.vertexNormal,
+                numComponents,
+                type,
+                normalize,
+                stride,
+                offset)
+            gl.enableVertexAttribArray(
+                programInfo.attributeLocations.vertexNormal)
+        }
 
         // Tell WGL how to pull positions out from the position buffer and into the vertexPosition attribute
         {
@@ -143,6 +167,10 @@ class RenderPipeline {
             const type = gl.UNSIGNED_SHORT
             gl.drawElements(gl.TRIANGLES, facesCount, type, offset)
         }
+        gl.uniformMatrix4fv(
+            programInfo.uniformLocations.normalMatrix,
+            false,
+            normalMatrix)
 
         this.SquareRotation += this.DeltaTimeSeconds
 
@@ -164,11 +192,13 @@ class RenderPipeline {
             program,
             attributeLocations: {
                 vertexPosition: gl.getAttribLocation(program, 'aVertexPosition'),
-                vertexColor: gl.getAttribLocation(program, 'aVertexColor')
+                vertexColor: gl.getAttribLocation(program, 'aVertexColor'),
+                vertexNormal: gl.getAttribLocation(program, 'aVertexNormal')
             },
             uniformLocations: {
                 projectionMatrix: gl.getUniformLocation(program, 'uProjectionMatrix')!,
-                modelViewMatrix: gl.getUniformLocation(program, 'uModelViewMatrix')!
+                modelViewMatrix: gl.getUniformLocation(program, 'uModelViewMatrix')!,
+                normalMatrix: gl.getUniformLocation(program, 'uNormalMatrix')!
             }
         }
     }
@@ -179,7 +209,8 @@ class RenderPipeline {
             position: initBuffer(gl, gl.ARRAY_BUFFER, 'position', new Float32Array(this.Bunny.vertices)),
             color: undefined,
             // color: initBuffer(gl, gl.ARRAY_BUFFER, 'color', new Float32Array(Cube.getColors())),
-            indices: initBuffer(gl, gl.ELEMENT_ARRAY_BUFFER, 'index', new Uint16Array(this.Bunny.faces))
+            indices: initBuffer(gl, gl.ELEMENT_ARRAY_BUFFER, 'index', new Uint16Array(this.Bunny.faces)),
+            normals: initBuffer(gl, gl.ARRAY_BUFFER, 'normal', new Float32Array(this.Bunny.vertexNormals))
         }
     }
 }

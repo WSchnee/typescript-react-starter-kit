@@ -5,15 +5,18 @@ export interface ProgramInfo {
     attributeLocations: {
         vertexPosition: number
         vertexColor: number
+        vertexNormal: number
     },
     uniformLocations: {
         projectionMatrix: WebGLUniformLocation,
         modelViewMatrix: WebGLUniformLocation
+        normalMatrix: WebGLUniformLocation
     }
 }
 
 export interface PipelineBuffers {
     position: WebGLBufferContainer,
     color?: WebGLBufferContainer,
-    indices: WebGLBufferContainer
+    indices: WebGLBufferContainer,
+    normals: WebGLBufferContainer
 }
