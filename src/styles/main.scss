@@ -1,25 +1,9 @@
-// @import "~normalize.css";
-// @import "./variables.scss";
+@import "~normalize.css";
+@import "./variables.scss";
 
-$header-height: 3rem;
-$max-width: 60rem;
-$grid-columns: auto $max-width auto;
-$color-darker: #2B332F;
-$color-dark: #325643;
-$color: #28784D;
-$color-light: #0C9B4E;
-$color-lighter: #00C059;
-
-$color-main: #108EE9;
-
-@mixin tablet {
-	@media (max-width: $max-width) {
-		@content;
-	}
-}
 
 * {
-	box-sizing: border-box;
+	box-sizing: none;
 }
 
 html, body {
@@ -29,18 +13,18 @@ html, body {
 
 :global { // Don't generate css-modules for these selectors
 	#root {
-		display: grid;
+		// display: grid;
 		width: 100%;
 		height: 100%;
-		grid-template-areas:
-			"nav  nav    nav"
-			"left main   right"
-			"left footer right";
-		grid-template-rows: $header-height 1fr 4rem;
-		grid-template-columns: $grid-columns;
+		// grid-template-areas:
+		// 	"nav  nav    nav"
+		// 	"main main   main"
+		// 	"left footer right";
+		// grid-template-rows: $header-height 1fr 4rem;
+		// grid-template-columns: $grid-columns;
 
-		@include tablet {
-			grid-template-columns: 0 100% 0;
-		}
+		// @include tablet {
+		// 	grid-template-columns: 0 100% 0;
+		// }
 	}
 }

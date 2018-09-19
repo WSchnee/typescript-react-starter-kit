@@ -12,3 +12,8 @@ declare module '*.obj' {
     const content: {vertices: number[], vertexNormals: number[], faces: number[]}
     export default content
 }
+
+declare module '*.bmp' {
+    const content: any
+    export default content
+}

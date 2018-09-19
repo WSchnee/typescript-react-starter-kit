@@ -15,7 +15,7 @@ const onInitCanvas = (state: State): State => {
     }
 }
 
-export default function crand (state: State = DEFAULT_STATE, action: Action): State {
+export default function gl (state: State = DEFAULT_STATE, action: Action): State {
     switch (action.type) {
         case 'INIT_GL_CANVAS': return onInitCanvas(state)
         default:

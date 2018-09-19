@@ -55,6 +55,8 @@ class RenderPipeline {
         const buffers = this.PipelineBuffers
         const programInfo = this.ProgramInfo
 
+        gl.viewport(0, 0, gl.canvas.width, gl.canvas.height)
+
         gl.clearColor(0.0, 0.0, 0.0, 1.0 )         // Clear to black opaque (buffer?)
         gl.clearDepth(1.0)                         // Clear everything
         gl.enable(gl.DEPTH_TEST)                   // Enable depth testing

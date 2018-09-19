@@ -5,21 +5,18 @@ import { connect } from 'react-redux'
 import { State } from 'reducers'
 
 const mapStateToProps = (state: State) => ({
-    initialized: state.gl.initialized
+    initialized: state.gl.initialized,
+    width: state.windowEvents.width,
+    height: state.windowEvents.height
 })
 
 const dispatchToProps = {
     initCanvas: Actions.initGlCanvas
 }
 
-type AdditionalProps = {
-    width: number,
-    height: number
-}
+type Props = ReturnType<typeof mapStateToProps> & typeof dispatchToProps
 
-type Props = ReturnType<typeof mapStateToProps> & typeof dispatchToProps & AdditionalProps
-
-class GlCanvas extends React.Component<Props> {
+class GlCanvas extends React.PureComponent<Props> {
 
     // private RenderPipeline: RenderPipeline | undefined
     private Canvas: HTMLCanvasElement = document.createElement('canvas')
@@ -28,12 +25,14 @@ class GlCanvas extends React.Component<Props> {
     public componentWillReceiveProps (nextProps: Props): void {
         if (this.props.initialized === false && nextProps.initialized === true) {
             this.RenderPipeline = new RenderPipeline(this.Canvas)
-            requestAnimationFrame(this.RenderPipeline.render.bind(this.RenderPipeline))
+            const task = async () =>
+                requestAnimationFrame(this.RenderPipeline!.render.bind(this.RenderPipeline))
+            task()
         }
     }
 
     public render () {
-        return <canvas width={this.props.width} height={this.props.height} ref={c => this.Canvas = c!}/>
+       return <canvas width={this.props.width} height={this.props.height} ref={c => this.Canvas = c!}/>
     }
 
     public componentDidMount () {

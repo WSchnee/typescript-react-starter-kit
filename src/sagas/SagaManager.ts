@@ -7,8 +7,9 @@ import { cancel, fork, take } from 'redux-saga/effects'
 
 import { State } from 'reducers'
 import demoSaga from './version'
+import windowEventSaga from './windowEventsSaga'
 
-const sagas = [demoSaga]
+const sagas = [demoSaga, windowEventSaga]
 
 export const CANCEL_SAGAS_HMR = 'CANCEL_SAGAS_HMR'
 

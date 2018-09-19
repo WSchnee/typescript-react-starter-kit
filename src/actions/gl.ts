@@ -1,7 +1,7 @@
 import { createAction } from './actionCreator'
 
-const CrandActions = {
+const GlActions = {
     initGlCanvas: createAction<'INIT_GL_CANVAS'>('INIT_GL_CANVAS')
 }
 
-export default CrandActions
+export default GlActions

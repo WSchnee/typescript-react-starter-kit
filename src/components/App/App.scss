@@ -1,13 +1,18 @@
 @import "~styles/variables.scss";
 
+// main {
+// 	grid-area: main;
+// }
+
+// footer {
+// 	grid-area: footer;
+// }
+
+// nav, footer {
+// 	padding: 0 20px;
+// }
+
 main {
-	grid-area: main;
-}
-
-footer {
-	grid-area: footer;
-}
-
-nav, main, footer {
-	padding: 0 20px;
+	height: 100vh;
+	overflow-y: hidden;
 }

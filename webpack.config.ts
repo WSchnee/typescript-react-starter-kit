@@ -20,7 +20,7 @@ const config: webpack.Configuration = {
             classes: srcResolve('classes'),
             primitives: srcResolve('primitives'),
             sagas: srcResolve('sagas'),
-            gltools: srcResolve('gltools')
+            content: srcResolve('content')
         },
         extensions: packageJSON.jest.moduleFileExtensions.map(ext => `.${ext}`)
     },
@@ -72,6 +72,14 @@ const config: webpack.Configuration = {
                 use: [
                   {
                     loader: path.resolve('loaders/ObjLoader.ts')
+                  }
+                ]
+            },
+            {
+                test: /\.bmp/,
+                use: [
+                  {
+                    loader: path.resolve('loaders/BmpLoader.ts')
                   }
                 ]
             }
