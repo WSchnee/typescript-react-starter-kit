@@ -20,7 +20,8 @@ const config: webpack.Configuration = {
             classes: srcResolve('classes'),
             primitives: srcResolve('primitives'),
             sagas: srcResolve('sagas'),
-            content: srcResolve('content')
+            content: srcResolve('content'),
+            types: srcResolve('types')
         },
         extensions: packageJSON.jest.moduleFileExtensions.map(ext => `.${ext}`)
     },

@@ -11,7 +11,8 @@ const mapStateToProps = (state: State) => ({
 })
 
 const dispatchToProps = {
-    initCanvas: Actions.initGlCanvas
+    initCanvas: Actions.initGlCanvas,
+    registerPipeline: Actions.glRegisterPipeline
 }
 
 type Props = ReturnType<typeof mapStateToProps> & typeof dispatchToProps
@@ -21,10 +22,10 @@ class GlCanvas extends React.PureComponent<Props> {
     // private RenderPipeline: RenderPipeline | undefined
     private Canvas: HTMLCanvasElement = document.createElement('canvas')
     private RenderPipeline: RenderPipeline | undefined = undefined
-
     public componentWillReceiveProps (nextProps: Props): void {
         if (this.props.initialized === false && nextProps.initialized === true) {
             this.RenderPipeline = new RenderPipeline(this.Canvas)
+            this.props.registerPipeline(this.RenderPipeline)
             const task = async () =>
                 requestAnimationFrame(this.RenderPipeline!.render.bind(this.RenderPipeline))
             task()

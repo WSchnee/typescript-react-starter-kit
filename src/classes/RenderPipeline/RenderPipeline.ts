@@ -1,6 +1,7 @@
 import {mat4} from 'gl-matrix'
 import BunnyModel from 'models/bunny10k.obj'
 import {FsSource, VsSource} from 'shaders'
+import ModelObject from 'types/ModelObject'
 import {Canvas as DefaultCanvas, Gl, initBuffer, initShaderProgram} from './Gl/Tools'
 // import * as Cube from './Primitives/Cube'
 import {PipelineBuffers, ProgramInfo} from './Program'
@@ -11,20 +12,21 @@ class RenderPipeline {
     private SquareRotation: number
     private DeltaTimeSeconds: number
     private Then: number
+    private Scale: number[] = [10, 10, 10]
 
     private Canvas: HTMLCanvasElement
     private Gl: WebGLRenderingContext
     private ShaderProgram: WebGLProgram
     private PipelineBuffers: PipelineBuffers
     private ProgramInfo: ProgramInfo
-    private Bunny: {vertices: number[], vertexNormals: number[], faces: number[]}
+    private Bunny: ModelObject
 
     constructor (canvas: HTMLCanvasElement) {
         this.SquareRotation = 0.0
         this.DeltaTimeSeconds = 0.0
         this.Then = 0
 
-        this.Bunny = (BunnyModel as any)
+        this.Bunny = BunnyModel
 
         this.Canvas = canvas || DefaultCanvas
         this.Gl = Gl(this.Canvas)
@@ -33,7 +35,16 @@ class RenderPipeline {
         this.PipelineBuffers = this.initializeBuffers()
     }
 
-    public initializePipeline (canvas: HTMLCanvasElement) {
+    public setScale (scale: number): void {
+        const absScale = Math.abs(scale)
+        this.Scale = Array<number>().concat(absScale, absScale, absScale)
+    }
+
+    public getScale (): number {
+        return this.Scale[0]
+    }
+
+    public initializePipeline (canvas: HTMLCanvasElement): void {
         this.Canvas = canvas
         this.Gl = Gl(this.Canvas)
         this.ShaderProgram = this.initializeShaderProgram()
@@ -76,10 +87,17 @@ class RenderPipeline {
         // Set drawing to Identity
         const modelViewMatrix = mat4.create()
         // Move drawing position to where we want to draw
+
         mat4.translate(
             modelViewMatrix, // Destination
             modelViewMatrix, // Source
-            [-0.0, -1.0, -6.0] // Amount to translate (x,y,z)
+            [-0.0, -(this.Bunny.rects.vertexRect.h / 2) * this.Scale[1], -6.0] // Amount to translate (x,y,z)
+        )
+
+        mat4.scale(
+            modelViewMatrix,
+            modelViewMatrix,
+            this.Scale
         )
 
         // Rotate object
@@ -89,11 +107,12 @@ class RenderPipeline {
             this.SquareRotation,
             [0, 1, 0] // Around Z
         )
-        mat4.scale(
-            modelViewMatrix,
-            modelViewMatrix,
-            [10, 10, 10]
-        )
+
+        // mat4.translate(
+        //     modelViewMatrix, // Destination
+        //     modelViewMatrix, // Source
+        //     [0.0, 1.0, 6.0] // Amount to translate (x,y,z)
+        // )
 
         const normalMatrix = mat4.create()
         mat4.invert(normalMatrix, modelViewMatrix)

@@ -18,12 +18,11 @@ const mapStateToProps = (state: State) => ({
 type Props = ReturnType<typeof mapStateToProps>  &typeof dispatchToProps
 
 class WindowEventListener extends React.Component<Props> {
-    private ignoredKeys: string[] = [
-        'Meta',
-        'Control',
-        'F5',
-        'F12',
-        'r'
+    private ListenKeys: string[] = [
+        'ArrowDown',
+        'ArrowUp',
+        'ArrowLeft',
+        'ArrowRight'
     ]
 
     public componentWillMount (): void {
@@ -45,7 +44,7 @@ class WindowEventListener extends React.Component<Props> {
     }
 
     private hijackKeyEvent (k: KeyboardEvent, func: (payload: KeyboardEvent) => any): void {
-        if (!this.ignoredKeys.includes(k.key)) {
+        if (this.ListenKeys.includes(k.key)) {
             k.preventDefault()
             k.stopPropagation()
             func(k)
