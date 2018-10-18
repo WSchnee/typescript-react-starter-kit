@@ -11,8 +11,9 @@ declare module '*.glsl' {
 declare module '*.obj' {
     const content: {
         vertices: number[],
-        vertexNormals: number[],
+        vertexNormals?: number[],
         faces: number[]
+        color?: number[]
         pointInformation: {
             verticesMax: {
                 x: number,

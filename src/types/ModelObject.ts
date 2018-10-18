@@ -28,22 +28,23 @@ export const Default: ModelObject = {
 export interface ObjPointInformation {
     verticesMax: SimpleVec3,
     verticesMin: SimpleVec3,
-    vertexNormalsMax: SimpleVec3,
-    vertexNormalsMin: SimpleVec3,
+    vertexNormalsMax?: SimpleVec3,
+    vertexNormalsMin?: SimpleVec3,
     facesMax: SimpleVec3,
     facesMin: SimpleVec3
 }
 
 export interface ObjRects {
     vertexRect: SimpleRect,
-    vertexNormalRect: SimpleRect,
+    vertexNormalRect?: SimpleRect,
     faceRect: SimpleRect
 }
 
 export default interface ModelObject {
     vertices: number[],
-    vertexNormals: number[],
+    vertexNormals?: number[],
     faces: number[]
+    color?: number[]
     pointInformation: ObjPointInformation
     rects: ObjRects
 }

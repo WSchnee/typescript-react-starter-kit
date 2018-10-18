@@ -1,3 +1,5 @@
+import ModelObject from '../types/ModelObject'
+
 export const Positions = [
     // Front face
     -1.0, -1.0,  1.0,
@@ -67,4 +69,35 @@ export const getColors = (): number[] => {
     }
 
     return colors
+}
+
+export const toModelObject = (): ModelObject => {
+    const verticesMax = {x: 1 , y: 1, z: 1}
+    const verticesMin = {x: -1 , y: -1, z: -1}
+    const facesMax = {x: 20 , y: 22, z: 23}
+    const facesMin = {x: 0 , y: 0, z: 0}
+
+    return {
+        vertices: Positions,
+        faces: Indices,
+        color: getColors(),
+        pointInformation: {
+            verticesMax,
+            verticesMin,
+            facesMax,
+            facesMin
+        },
+        rects: {
+            vertexRect: {
+                w: verticesMax.x - verticesMin.x,
+                h: verticesMax.y - verticesMin.y,
+                d: verticesMax.z - verticesMin.x
+            },
+            faceRect: {
+                w: facesMax.x - facesMin.x,
+                h: facesMax.y - facesMin.y,
+                d: facesMax.z - facesMin.x
+            }
+        }
+    }
 }

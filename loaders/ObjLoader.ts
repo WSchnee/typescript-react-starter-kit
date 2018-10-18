@@ -1,5 +1,5 @@
-import ModelObject from 'types/ModelObject'
-import SimpleVec3 from 'types/SimpleVec3'
+import ModelObject from '../src/types/ModelObject'
+import SimpleVec3 from '../src/types/SimpleVec3'
 
 export default function (source: string) {
     const vertices: number[] = []

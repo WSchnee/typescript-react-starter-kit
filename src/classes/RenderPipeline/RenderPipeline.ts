@@ -1,10 +1,11 @@
 import {mat4} from 'gl-matrix'
-import BunnyModel from 'models/bunny10k.obj'
+import * as Cube from 'primitives/Cube'
+// import BunnyModel from 'models/bunny10k.obj'
 import {FsSource, VsSource} from 'shaders'
 import ModelObject from 'types/ModelObject'
 import {Canvas as DefaultCanvas, Gl, initBuffer, initShaderProgram} from './Gl/Tools'
-// import * as Cube from './Primitives/Cube'
-import {PipelineBuffers, ProgramInfo} from './Program'
+import * as Program from './Program'
+import * as Recipe from './Recipes'
 
 // tslint:disable:no-bitwise
 class RenderPipeline {
@@ -17,8 +18,8 @@ class RenderPipeline {
     private Canvas: HTMLCanvasElement
     private Gl: WebGLRenderingContext
     private ShaderProgram: WebGLProgram
-    private PipelineBuffers: PipelineBuffers
-    private ProgramInfo: ProgramInfo
+    private PipelineBuffers: Program.PipelineBuffers
+    private ProgramInfo: Program.ProgramInfo
     private Bunny: ModelObject
 
     constructor (canvas: HTMLCanvasElement) {
@@ -26,12 +27,12 @@ class RenderPipeline {
         this.DeltaTimeSeconds = 0.0
         this.Then = 0
 
-        this.Bunny = BunnyModel
+        this.Bunny = Cube.toModelObject()
 
         this.Canvas = canvas || DefaultCanvas
         this.Gl = Gl(this.Canvas)
         this.ShaderProgram = this.initializeShaderProgram()
-        this.ProgramInfo = this.linkBufferLocations()
+        this.ProgramInfo = Program.linkBufferLocations(this.Gl, this.ShaderProgram, this.Bunny)
         this.PipelineBuffers = this.initializeBuffers()
     }
 
@@ -48,7 +49,7 @@ class RenderPipeline {
         this.Canvas = canvas
         this.Gl = Gl(this.Canvas)
         this.ShaderProgram = this.initializeShaderProgram()
-        this.ProgramInfo = this.linkBufferLocations()
+        this.ProgramInfo = Program.linkBufferLocations(this.Gl, this.ShaderProgram, this.Bunny)
         this.PipelineBuffers = this.initializeBuffers()
     }
 
@@ -118,63 +119,10 @@ class RenderPipeline {
         mat4.invert(normalMatrix, modelViewMatrix)
         mat4.transpose(normalMatrix, normalMatrix)
 
-        // // // Tell WGL how to pull pcolor out from the color buffer and into the vertexPosition attribute
-        // {
-        //     const numComponents = 4    // Pull out 4 values per iteration
-        //     const type = gl.FLOAT      // Data in the buffer = 32bit floats
-        //     const normalize = false    // Do not normalize
-        //     const stride = 0           // How many bytes to get from one set of values to the next
-        //                                // 0 = use type and numComponents above
-        //     const offset = 0           // Buffer-offset (where to start working from)
-
-        //     gl.bindBuffer(buffers.color.type, buffers.color.buffer)
-        //     gl.vertexAttribPointer(programInfo.attributeLocations.vertexColor, numComponents, type, normalize, stride, offset)
-        //     gl.enableVertexAttribArray(programInfo.attributeLocations.vertexColor)
-        // }
-
-          // Tell WebGL how to pull out the normals from
-        // the normal buffer into the vertexNormal attribute.
-        {
-            const numComponents = 3
-            const type = gl.FLOAT
-            const normalize = false
-            const stride = 0
-            const offset = 0
-            gl.bindBuffer(buffers.normals.type, buffers.normals.buffer)
-            gl.vertexAttribPointer(
-                programInfo.attributeLocations.vertexNormal,
-                numComponents,
-                type,
-                normalize,
-                stride,
-                offset)
-            gl.enableVertexAttribArray(
-                programInfo.attributeLocations.vertexNormal)
+        if (buffers.normals && programInfo.attributeLocations.vertexNormal) {
+            Recipe.bindColorRecipe(gl, buffers.normals, programInfo.attributeLocations.vertexNormal)
         }
-
-        // Tell WGL how to pull positions out from the position buffer and into the vertexPosition attribute
-        {
-            const numComponents = 3    // Pull out 3 values per iteration
-            const type = gl.FLOAT      // Data in the buffer = 32bit floats
-            const normalize = false    // Do not normalize
-            const stride = 0           // How many bytes to get from one set of values to the next
-                                        // 0 = use type and numComponents above
-            const offset = 0           // Buffer-offset (where to start working from)
-
-            gl.bindBuffer(buffers.position.type, buffers.position.buffer)
-            gl.vertexAttribPointer(
-                programInfo.attributeLocations.vertexPosition,
-                numComponents,
-                type,
-                normalize,
-                stride,
-                offset
-            )
-            gl.enableVertexAttribArray(programInfo.attributeLocations.vertexPosition)
-        }
-
-        // Tell WGL which indices to use to index the vertices
-        gl.bindBuffer(buffers.indices.type, buffers.indices.buffer)
+        Recipe.bindPositionRecipe(gl, buffers.position, buffers.indices, programInfo.attributeLocations.vertexPosition)
 
         // Tell WGL to use supplied shader program
         gl.useProgram(programInfo.program)
@@ -206,32 +154,14 @@ class RenderPipeline {
         )
     }
 
-    private linkBufferLocations (): ProgramInfo {
-        const gl = this.Gl
-        const program = this.ShaderProgram
-        return {
-            program,
-            attributeLocations: {
-                vertexPosition: gl.getAttribLocation(program, 'aVertexPosition'),
-                vertexColor: gl.getAttribLocation(program, 'aVertexColor'),
-                vertexNormal: gl.getAttribLocation(program, 'aVertexNormal')
-            },
-            uniformLocations: {
-                projectionMatrix: gl.getUniformLocation(program, 'uProjectionMatrix')!,
-                modelViewMatrix: gl.getUniformLocation(program, 'uModelViewMatrix')!,
-                normalMatrix: gl.getUniformLocation(program, 'uNormalMatrix')!
-            }
-        }
-    }
-
-    private initializeBuffers (): PipelineBuffers {
+    private initializeBuffers (): Program.PipelineBuffers {
         const gl = this.Gl
         return {
             position: initBuffer(gl, gl.ARRAY_BUFFER, 'position', new Float32Array(this.Bunny.vertices)),
             color: undefined,
             // color: initBuffer(gl, gl.ARRAY_BUFFER, 'color', new Float32Array(Cube.getColors())),
             indices: initBuffer(gl, gl.ELEMENT_ARRAY_BUFFER, 'index', new Uint16Array(this.Bunny.faces)),
-            normals: initBuffer(gl, gl.ARRAY_BUFFER, 'normal', new Float32Array(this.Bunny.vertexNormals))
+            normals: this.Bunny.vertexNormals ? initBuffer(gl, gl.ARRAY_BUFFER, 'normal', new Float32Array(this.Bunny.vertexNormals)) : undefined
         }
     }
 }
