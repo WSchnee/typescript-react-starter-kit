@@ -1,3 +1,5 @@
+import ModelObject from 'types/ModelObject'
+
 export const Positions = [
     // Front face
     -1.0, -1.0,  1.0,
@@ -58,6 +60,39 @@ export const FaceColors = [
     [1.0,  0.0,  1.0,  1.0]    // Left face: purple
 ]
 
+export const TextureCoordinates = [
+    // Front
+    0.0,  0.0,
+    1.0,  0.0,
+    1.0,  1.0,
+    0.0,  1.0,
+    // Back
+    0.0,  0.0,
+    1.0,  0.0,
+    1.0,  1.0,
+    0.0,  1.0,
+    // Top
+    0.0,  0.0,
+    1.0,  0.0,
+    1.0,  1.0,
+    0.0,  1.0,
+    // Bottom
+    0.0,  0.0,
+    1.0,  0.0,
+    1.0,  1.0,
+    0.0,  1.0,
+    // Right
+    0.0,  0.0,
+    1.0,  0.0,
+    1.0,  1.0,
+    0.0,  1.0,
+    // Left
+    0.0,  0.0,
+    1.0,  0.0,
+    1.0,  1.0,
+    0.0,  1.0
+]
+
 export const getColors = (): number[] => {
     let colors: number[] = []
 
@@ -67,4 +102,24 @@ export const getColors = (): number[] => {
     }
 
     return colors
+}
+
+export const CubeModel: ModelObject = {
+    vertices: Positions,
+    vertexNormals: Positions,
+    faces: Indices,
+    textureCoordinates: TextureCoordinates,
+    pointInformation: {
+        verticesMax: {x: 1, y: 1, z: 1},
+        verticesMin: {x: -1, y: -1, z: -1},
+        vertexNormalsMax: {x: 1, y: 1, z: 1},
+        vertexNormalsMin: {x: -1, y: -1, z: -1},
+        facesMax: {x: 1, y: 1, z: 1},
+        facesMin: {x: -1, y: -1, z: -1}
+    },
+    rects: {
+        vertexRect: {w: 1, h: 1, d: 1},
+        vertexNormalRect: {w: 1, h: 1, d: 1},
+        faceRect: {w: 1, h: 1, d: 1}
+    }
 }

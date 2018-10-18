@@ -9,3 +9,10 @@ export default interface SimpleVec3 {
     y: number,
     z: number
 }
+
+// Allows setting value to empty ''
+export interface DefaultableSimpleVec3 {
+    x: number | '',
+    y: number | '',
+    z: number | ''
+}

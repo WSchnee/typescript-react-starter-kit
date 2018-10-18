@@ -44,6 +44,7 @@
         "@fortawesome/react-fontawesome": "fortawesome/react-fontawesome",
         "@types/gl-matrix": "^2.4.1",
         "cpp-wasm-loader": "^0.9.0",
+        "file-loader": "^2.0.0",
         "gl-matrix": "^2.8.1",
         "history": "^4.6.3",
         "normalize.css": "^8.0.0",

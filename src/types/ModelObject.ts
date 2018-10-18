@@ -20,6 +20,7 @@ export const Default: ModelObject = {
     vertices: [0, 0, 0],
     vertexNormals: [0, 0, 0],
     faces: [0, 0, 0],
+    textureCoordinates: [0, 0, 0],
     pointInformation: DefaultObjPointInformation,
     rects: DefaultRects
 }
@@ -44,6 +45,7 @@ export default interface ModelObject {
     vertices: number[],
     vertexNormals: number[],
     faces: number[]
+    textureCoordinates: number[],
     pointInformation: ObjPointInformation
     rects: ObjRects
 }

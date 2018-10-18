@@ -21,7 +21,7 @@ const DEFAULT_STATE: State = {
 }
 
 const onKeyDown = (state: State, payload: KeyboardEvent): State => {
-    console.log(payload)
+    // console.log(payload)
     return {
         ...state
     }

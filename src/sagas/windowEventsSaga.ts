@@ -9,6 +9,24 @@ export default function * watchConnects () {
 }
 
 function* dispatchKeyDown (action: typeof Actions.keyDown) {
+    switch (action.payload.key) {
+        case 'ArrowDown':
+        case 'Down':
+            yield put(Actions.translateObjectPosition({angle: 'y', new: -0.05}))
+            break
+        case 'ArrowUp':
+        case 'Up':
+            yield put(Actions.translateObjectPosition({angle: 'y', new: 0.05}))
+            break
+        case 'ArrowRight':
+        case 'Right':
+            yield put(Actions.translateObjectPosition({angle: 'x', new: 0.05}))
+            break
+        case 'ArrowLeft':
+        case 'Left':
+            yield put(Actions.translateObjectPosition({angle: 'x', new: -0.05}))
+            break
+    }
     yield put(Actions.DispatchKeyDown(action.payload))
 }
 

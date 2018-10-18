@@ -21,7 +21,8 @@ const config: webpack.Configuration = {
             primitives: srcResolve('primitives'),
             sagas: srcResolve('sagas'),
             content: srcResolve('content'),
-            types: srcResolve('types')
+            types: srcResolve('types'),
+            images: srcResolve('images')
         },
         extensions: packageJSON.jest.moduleFileExtensions.map(ext => `.${ext}`)
     },
@@ -83,6 +84,12 @@ const config: webpack.Configuration = {
                     loader: path.resolve('loaders/BmpLoader.ts')
                   }
                 ]
+            },
+            {
+                test: /\.(jpe?g|png|gif|svg)$/i,
+                exclude: /node_modules/,
+                loader: 'file-loader',
+                options: {sourceMap: true}
             }
 
         ]
